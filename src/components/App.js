@@ -1,58 +1,35 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components'
+import React, { Suspense } from 'react';
+import { BrowserRouter, Switch } from 'react-router-dom';
 
-import ContactForm from './ContactForm';
-import ContactList from './ContactList';
-import Filter from './Filter';
 import ThemeContext from '../context/ThemeContext';
 import Layout from './Layout/Layout';
-import contactsSelector from '../redux/phonebook/contactsSelectors';
-import Spinner from './Spinner/Spinner';
+import routes from '../routes';
+import Spinner from './Spinner';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
 
+import '../index.css';
 
-const App = ({ contacts, loading }) => {
-
+const App = () => {
   return (
     <ThemeContext>
-      <Layout>
-        <Section>
-          <PageTitle>Phonebook</PageTitle>
-          <ContactForm />
-        </Section>
-        {loading && <Spinner />}
-        <Section>
-          <SectionTitle>Contacts</SectionTitle>
-          {contacts.length > 1 && <Filter />}
-          <ContactList />
-        </Section>
-      </Layout>
+      <BrowserRouter>
+        <Layout>
+          <Suspense fallback={<Spinner />}>
+            <Switch>
+              {routes.map(route =>
+                route.private ? (
+                  <PrivateRoute key={route.label} {...route} />
+                ) : (
+                    <PublicRoute key={route.label} {...route} />
+                  ),
+              )}
+            </Switch>
+          </Suspense>
+        </Layout>
+      </BrowserRouter>
     </ThemeContext>
   )
 }
 
-const Section = styled.section`
-  &:not(:last-of-type) {
-    margin-bottom: 40px;
-  }
-`;
-
-const PageTitle = styled.h1`
-  margin-bottom: 20px;
-  font-size: 48px;
-  font-weight: 700;
-`;
-
-const SectionTitle = styled.h2`
-  margin-bottom: 20px;
-  font-size: 42px;
-  font-weight: 500;
-`;
-
-
-const mapStateToProps = state => ({
-  contacts: contactsSelector.getContacts(state),
-  loading: contactsSelector.getLoading(state)
-});
-
-export default connect(mapStateToProps)(App);
+export default App;

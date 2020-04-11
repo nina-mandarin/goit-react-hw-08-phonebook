@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components'
+import {
+  CSSTransition,
+  TransitionGroup,
+} from 'react-transition-group';
+import List from '@material-ui/core/List';
 
 import ContactListItem from '../ContactListItem';
 import phonebookOperations from '../../redux/phonebook/phonebookOperations';
-import contactsSelector from '../../redux/phonebook/contactsSelectors';
+import contactsSelectors from '../../redux/phonebook/contactsSelectors';
 
+
+import styles from './ContactList.module.css';
 
 class ContactList extends Component {
 
@@ -21,28 +27,24 @@ class ContactList extends Component {
     }
 
     return (
-      <List>
+      <TransitionGroup component={List} style={{ maxWidth: '400px' }}>
         {contacts.map(({ id }) => {
           return (
-            <ContactListItem
-              key={id}
-              id={id}
-            />
+            <CSSTransition key={id} timeout={250} classNames={styles}>
+              <ContactListItem
+                key={id}
+                id={id}
+              />
+            </CSSTransition>
           );
         })}
-      </List>
+      </TransitionGroup>
     )
   }
 }
 
-const List = styled.ul`
-  padding: 0 0 0 10px;
-  margin: 0;
-  list-style-position: inside;
-`;
-
 const mapStateToProps = state => ({
-  contacts: contactsSelector.getVisibleContacts(state)
+  contacts: contactsSelectors.getVisibleContacts(state)
 });
 
 const mapDispatchToprops = {

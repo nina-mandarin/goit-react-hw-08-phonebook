@@ -1,14 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components'
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+
+const useStyles = makeStyles(theme => ({
+  wrap: {
+    width: '100%',
+    padding: theme.spacing(1, 0.5, 1, 2)
+  },
+  buttonContainer: {
+    textAlign: 'right'
+  }
+}));
 
 const ContactListItem = ({ name, number, onDelete }) => {
+  const classes = useStyles();
+
   return (
-    <Item>
-      <Name>{name}:</Name>
-      <Number>{number}</Number>
-      <Button type="button" onClick={onDelete}>Delete</Button>
-    </Item>
+    <ListItem disableGutters>
+      <Paper className={classes.wrap}>
+        <Grid container alignItems="center" spacing={0}>
+          <Grid item xs={6}>
+            <ListItemText>{name}:</ListItemText>
+          </Grid>
+          <Grid item xs={4}>
+            <ListItemText>{number}</ListItemText>
+          </Grid>
+          <Grid item xs={2} className={classes.buttonContainer}>
+            <IconButton aria-label="delete" color="secondary" onClick={onDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Paper>
+    </ListItem>
   )
 }
 
@@ -17,32 +47,5 @@ ContactListItem.propTypes = {
   number: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired
 };
-
-const Item = styled.li`
-  margin-bottom: 12px;
-  :last-of-type {
-    margin-bottom: 0;
-  }
-`;
-
-const Name = styled.span`
-  display: inline-block;
-  margin-right: 10px;
-`;
-
-const Number = styled.span`
-  display: inline-block;
-  margin-right: 16px;
-`;
-
-const Button = styled.button`
-  display: inline-block;
-  padding: 4px 8px;
-  color: #fff;
-  background-color: #f00;
-  border: 1px solid #f00;
-  border-radius: 4px;
-  outline: none;
-`;
 
 export default ContactListItem;

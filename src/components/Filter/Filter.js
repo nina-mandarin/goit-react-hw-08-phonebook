@@ -1,31 +1,41 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components'
+import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { CSSTransition } from 'react-transition-group';
 
 import phonebookActions from '../../redux/phonebook/phonebookActions';
 import contactsSelector from '../../redux/phonebook/contactsSelectors';
 
-const Filter = ({ value, onChange }) => {
+import styles from './Filter.module.css'
+
+const Filter = ({ contacts, value, onChange }) => {
   return (
-    <Label>
-      <LabelText>Find contacts by name</LabelText>
-      <input type="text" name="filter" value={value} onChange={e => onChange(e.target.value)} />
-    </Label>
+    <CSSTransition
+      in={contacts.length > 1}
+      timeout={250}
+      classNames={styles}
+      unmountOnExit
+    >
+      <Box marginBottom={2}>
+        <Typography variant="h6">Find contacts by name</Typography>
+        <TextField
+          variant="outlined"
+          type="text"
+          name="filter"
+          value={value}
+          onChange={e => onChange(e.target.value)}
+        />
+      </Box>
+    </CSSTransition>
   )
 
-}
+};
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 16px;
-`;
-
-const LabelText = styled.span`
-  display: block;
-  margin-bottom: 8px;
-`;
 
 const mapStateToProps = state => ({
+  contacts: contactsSelector.getContacts(state),
   value: contactsSelector.getFilter(state),
 });
 

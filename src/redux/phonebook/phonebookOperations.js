@@ -1,15 +1,16 @@
 import axios from 'axios';
+
+import token from '../../utils/token';
 import phonebookActions from './phonebookActions';
 
-axios.defaults.baseURL = 'https://goit-phonebook-api.herokuapp.com/v1';
-axios.defaults.headers.common['Authorization'] = 'a8ba0f66-29a2-4ed7-9ff2-514ea8b41c11';
+axios.defaults.baseURL = 'https://goit-phonebook-api.herokuapp.com';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const addContact = (name, number) => (dispatch, getState) => {
   // Check if a new name exists in contacts
   const currentContacts = getState().phonebook.contacts;
   if (currentContacts.find(contact => contact.name === name)) {
-    alert(`${name} is already in contacts`);
+    dispatch(phonebookActions.addContactError(`${name} is already in contacts`));
     return null;
   }
 
@@ -22,7 +23,17 @@ const addContact = (name, number) => (dispatch, getState) => {
     .catch(error => dispatch(phonebookActions.addContactError(error)));
 };
 
-const fetchContacts = () => dispatch => {
+const fetchContacts = () => (dispatch, getState) => {
+  const {
+    auth: { token: persistedToken },
+  } = getState();
+
+  if (!persistedToken) {
+    return;
+  }
+
+  token.set(persistedToken);
+
   dispatch(phonebookActions.fetchContactsRequest());
 
   axios

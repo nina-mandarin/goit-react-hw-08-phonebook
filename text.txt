@@ -1,0 +1,17 @@
+{
+  "name": "admin",
+  "email": "admin@gmail.com",
+  "password": "qwe123456789"
+}
+
+{
+  "name": "Test",
+  "email": "test@mail.com",
+  "password": "123456789"
+}
+
+{
+  "name": "Den",
+  "email": "den@mail.com",
+  "password": "qaz123456"
+}

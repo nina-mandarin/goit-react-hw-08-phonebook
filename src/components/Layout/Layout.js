@@ -1,37 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components'
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles, ThemeProvider, useTheme, createMuiTheme } from '@material-ui/core/styles';
 
 import ThemeSwitch from '../ThemeSwitch';
 import withTheme from '../hoc/withTheme';
 import { LIGHT } from '../../constants';
+import HeaderMenu from '../HeaderMenu';
 
-const Layout = ({ children, theme }) => {
+const useStyles = makeStyles(theme => ({
+  wrap: {
+    position: 'relative',
+    minHeight: '100vh',
+    padding: theme.spacing(7, 5),
+    overflow: 'hidden'
+  }
+}));
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
+
+const Layout = ({ children, myTheme }) => {
+  const classes = useStyles();
+  const theme = useTheme();
+
   return (
-    <Root theme={theme.type}>
-      <Wrapper theme={theme.type}>
-        <ThemeSwitch />
-        {children}
-      </Wrapper>
-    </Root>
+    <ThemeProvider theme={myTheme.type === LIGHT ? theme : darkTheme}>
+      <CssBaseline />
+      <Container maxWidth="md">
+        <HeaderMenu />
+        <Paper className={classes.wrap} square>
+          <ThemeSwitch />
+          {children}
+        </Paper>
+      </Container>
+    </ThemeProvider>
   )
 };
-
-const Root = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  background-color: ${props => props.theme === LIGHT ? '#eee' : '#444'};
-`;
-
-const Wrapper = styled.main`
-  position: relative;
-  width: 80%;
-  min-height: 100vh;
-  padding: 60px 40px;
-  margin: 0 auto;
-  color: ${props => props.theme === LIGHT ? '#333' : '#fff'};
-  background-color: ${props => props.theme === LIGHT ? '#fff' : '#222'};
-`;
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired

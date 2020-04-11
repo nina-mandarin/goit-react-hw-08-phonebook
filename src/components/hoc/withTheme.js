@@ -6,7 +6,7 @@ const withTheme = WrappedComponent => {
   return function WithTheme(props) {
     return (
       <ThemeContext.Consumer>
-        {theme => <WrappedComponent {...props} theme={theme} />}
+        {theme => <WrappedComponent {...props} myTheme={theme} />}
       </ThemeContext.Consumer>
     );
   };

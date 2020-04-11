@@ -14,6 +14,8 @@ const deleteContactError = createAction('phonebook/deleteError');
 
 const changeFilter = createAction('phonebook/filter');
 
+const hideError = createAction('phonebook/error');
+
 
 export default {
   addContactRequest,
@@ -25,5 +27,6 @@ export default {
   deleteContactRequest,
   deleteContactSuccess,
   deleteContactError,
-  changeFilter
+  changeFilter,
+  hideError
 };

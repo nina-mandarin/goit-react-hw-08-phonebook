@@ -15,6 +15,10 @@ const changeFilter = (state, action) => {
   return action.payload
 }
 
+const hideError = () => {
+  return false;
+};
+
 // reducers
 const contacts = createReducer([], {
   [phonebookActions.fetchContactsSuccess]: (state, action) => action.payload,
@@ -38,9 +42,15 @@ const loading = createReducer(false, {
   [phonebookActions.removeContactError]: () => false,
 });
 
+const error = createReducer(false, {
+  [phonebookActions.addContactError]: () => true,
+  [phonebookActions.hideError]: hideError,
+});
+
 
 export default combineReducers({
   contacts,
   filter,
-  loading
+  loading,
+  error
 });

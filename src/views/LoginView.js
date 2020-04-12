@@ -4,8 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import PageTitle from '../components/PageTitle';
-import { authOperations } from '../redux/auth'
 import FormWrap from '../components/FormWrap';
+import Notification from '../components/Notification';
+import { authOperations, authSelectors } from '../redux/auth'
+import authActions from '../redux/auth/authActions';
 
 class LoginView extends Component {
   state = {
@@ -31,9 +33,11 @@ class LoginView extends Component {
 
   render() {
     const { email, password } = this.state;
+    const { error, hideError } = this.props;
 
     return (
       <>
+        {error && <Notification open={Boolean(error)} handleClose={hideError} type="warning" message="Incorrect username or password" />}
         <PageTitle title="Login" />
         <FormWrap>
           <form onSubmit={this.handleSubmit}>
@@ -71,5 +75,14 @@ class LoginView extends Component {
   }
 };
 
+const mapStateToProps = state => ({
+  error: authSelectors.getError(state),
+});
 
-export default connect(null, { onLogin: authOperations.logIn })(LoginView);
+const mapDispatchToprops = {
+  onLogin: authOperations.logIn,
+  hideError: authActions.clearError
+};
+
+
+export default connect(mapStateToProps, mapDispatchToprops)(LoginView);

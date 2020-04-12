@@ -4,8 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import PageTitle from '../components/PageTitle';
-import { authOperations } from '../redux/auth'
 import FormWrap from '../components/FormWrap';
+import Notification from '../components/Notification';
+import { authOperations, authSelectors } from '../redux/auth'
+import authActions from '../redux/auth/authActions';
 
 class RegisterView extends Component {
   state = {
@@ -32,9 +34,11 @@ class RegisterView extends Component {
 
   render() {
     const { name, email, password } = this.state;
+    const { error, hideError } = this.props;
 
     return (
       <>
+        {error && <Notification open={Boolean(error)} handleClose={hideError} type="error" message="Something went wrong" />}
         <PageTitle title="Register" />
         <FormWrap>
           <form onSubmit={this.handleSubmit}>
@@ -85,4 +89,14 @@ class RegisterView extends Component {
 };
 
 
-export default connect(null, { onRegister: authOperations.register })(RegisterView);
+const mapStateToProps = state => ({
+  error: authSelectors.getError(state),
+});
+
+const mapDispatchToprops = {
+  onRegister: authOperations.register,
+  hideError: authActions.clearError
+};
+
+
+export default connect(mapStateToProps, mapDispatchToprops)(RegisterView);

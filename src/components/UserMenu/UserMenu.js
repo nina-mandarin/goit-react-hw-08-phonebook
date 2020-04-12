@@ -14,7 +14,6 @@ class UserMenu extends Component {
   }
 
   handleManuOpen = e => {
-    console.log('Open menu');
     return this.setState({
       isMenuOpen: true,
       anchorEl: e.currentTarget
@@ -22,7 +21,6 @@ class UserMenu extends Component {
   }
 
   handleManuClose = () => {
-    console.log('Close menu')
     return this.setState({
       isMenuOpen: false,
       anchorEl: null
